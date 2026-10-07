@@ -22,6 +22,16 @@ packages = ["app"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+# Total combiné app : 83/92 = 90,22 % ; sans tests du normaliseur : 72,83 %.
+# 89 % garde une marge de maintenance tout en bloquant cette perte de tests.
+fail_under = 89
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"

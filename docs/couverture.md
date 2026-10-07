@@ -16,7 +16,7 @@ La théorie est documentée dans [theorie.md](theorie.md). Sur `app/normalize.py
 - Choisir le seuil global après les tests utiles, à partir du score exact. `fail_under` bloque sous ce seuil ; en mode branches, il porte sur le total combiné de `app`, pas sur les seules branches de `normalize.py`.
 - Vérifier que retirer les tests de normalisation déclenche réellement le garde-fou, puis valider la CI sous Python 3.11.
 
-**Seuil retenu : à déterminer pendant la pratique**, après mesure de la suite renforcée. Aucun seuil n'est encore configuré. Le brief demande un seuil au-dessus de la mesure obtenue tout en exigeant une PR verte : un seuil réellement supérieur au score exact ferait échouer cette même suite. La décision fiable sera un seuil atteignable, justifié par les risques couverts et la capacité à détecter la suppression des tests, sans modifier le périmètre pour embellir le score.
+**Seuil retenu : 89 % du total combiné de `app`**, configuré dans `[tool.coverage.report]` avec `fail_under = 89`. La suite renforcée atteint 83/92 opportunités, soit 90,22 %. Le normaliseur atteint 100 % de lignes et 100 % de branches : les huit factures, les entrées numériques, l'espace fine insécable, le signe positif, les montants illisibles et l'absence de montant ont des assertions. Aucun code de production n'est exclu. La marge de 1,22 point évite de régler le seuil sur un arrondi ; la suppression des tests de normalisation reste nettement bloquée. Le brief demande un seuil supérieur à la mesure et une PR verte : ces exigences sont contradictoires pour la même suite. Nous retenons un seuil atteignable et un contrôle négatif explicite.
 
 Les tests unitaires restent déterministes et sans appel LLM réel : ils vérifient les transformations rapidement et sans exposer de données ni dépendre du réseau. La couverture ne certifie ni sécurité ni performance ; les validations métier avant export et les tests du client HTTP devront être évalués selon leur propre périmètre.
 
@@ -34,4 +34,14 @@ Pour obtenir les pourcentages séparés de lignes et de branches :
 .venv/bin/pytest --cov=app --cov-branch --cov-report=term-missing --cov-report=json:/tmp/factum-coverage.json
 ```
 
-Lire `files["app/normalize.py"].summary.percent_statements_covered` et `percent_branches_covered` dans le JSON ; `percent_covered` est le score combiné. La configuration et le seuil définitifs seront renseignés à la fin de la pratique.
+Lire `files["app/normalize.py"].summary.percent_statements_covered` et `percent_branches_covered` dans le JSON ; `percent_covered` est le score combiné.
+
+## Validation locale de la pratique
+
+Le 7 octobre 2026, sous Python 3.12.13 puis Python 3.11.15 (version mineure de la CI) : 16 tests passent avec le même score de 90,22 %. Le lint réussit. Pour reproduire le contrôle négatif sans supprimer le fichier :
+
+```bash
+.venv/bin/pytest --cov=app --cov-branch --ignore=tests/test_normalize.py
+```
+
+Le contrôle négatif a échoué comme prévu : le test du pipeline passe, mais le total combiné tombe à 72,83 %, sous le seuil de 89 %. Les statuts GitHub des deux PR restent à confirmer séparément ; une réussite locale ne vaut pas validation distante.
