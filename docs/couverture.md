@@ -44,4 +44,9 @@ Le 7 octobre 2026, sous Python 3.12.13 puis Python 3.11.15 (version mineure de l
 .venv/bin/pytest --cov=app --cov-branch --ignore=tests/test_normalize.py
 ```
 
-Le contrôle négatif a échoué comme prévu : le test du pipeline passe, mais le total combiné tombe à 72,83 %, sous le seuil de 89 %. Les statuts GitHub des deux PR restent à confirmer séparément ; une réussite locale ne vaut pas validation distante.
+Le contrôle négatif a échoué comme prévu : le test du pipeline passe, mais le total combiné tombe à 72,83 %, sous le seuil de 89 %.
+
+## Preuves GitHub
+
+- [PR #1 — tests et configuration](https://github.com/sofiane-git/norvence-factum-mini/pull/1) : [CI verte](https://github.com/sofiane-git/norvence-factum-mini/actions/runs/37587888609), le 7 octobre 2026.
+- [PR #2 — suppression des tests du normaliseur](https://github.com/sofiane-git/norvence-factum-mini/pull/2) : [CI rouge](https://github.com/sofiane-git/norvence-factum-mini/actions/runs/37587893448) sous Python 3.11.17, puis fermeture sans fusion. Le message confirme `FAIL Required test coverage of 89.0% not reached. Total coverage: 72.83%`, avec un code de sortie 1 malgré la réussite du test du pipeline.
